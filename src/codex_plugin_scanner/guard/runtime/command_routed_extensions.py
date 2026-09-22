@@ -11,13 +11,6 @@ _ROUTED_GLOBAL_FLAGS = frozenset({"--json", "-q", "--quiet"})
 _ROUTED_GLOBAL_OPTIONS = frozenset({"--host", "--workspace", "--filter"})
 _ROUTED_FORBIDDEN_FLAGS = frozenset({"--help", "-h"})
 
-ROUTED_ACTION_RISK_CLASSES: dict[str, tuple[str, ...]] = {
-    "routed adapter mutation command": ("destructive_shell",),
-    "routed doctor reconciliation command": ("destructive_shell",),
-    "routed uninstall command": ("destructive_shell",),
-    "routed update command": ("execution", "network_egress"),
-}
-
 
 def _routed_matcher(
     *subcommands: str,

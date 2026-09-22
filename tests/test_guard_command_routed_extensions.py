@@ -169,6 +169,10 @@ def test_enabled_routed_help_and_safe_commands_do_not_review(tmp_path: Path) -> 
         "routed upgrade -h",
         "routed --help",
         "routed -h",
+        "routed doctor -- --fix",
+        "routed doctor -- --fix --json",
+        "routed doctor -q -- --fix",
+        "routed doctor --host localhost -- --fix",
     )
     for command in safe_test_cases:
         evaluation = real_native_command_evaluation(
