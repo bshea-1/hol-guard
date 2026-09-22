@@ -33,7 +33,32 @@ def _routed_matcher(
 
 
 _ROUTED_DOCTOR_FIX = _routed_matcher("doctor", required_flags=frozenset({"--fix"}))
-_ROUTED_ADAPTERS_INSTALL = _routed_matcher("adapters", "install")
+_ROUTED_ADAPTERS_INSTALL = AnyMatcher(
+    matchers=(
+        executable_matcher(
+            "routed",
+            "adapters",
+            "install",
+            forbidden_flags=_ROUTED_FORBIDDEN_FLAGS,
+            global_flags=_ROUTED_GLOBAL_FLAGS,
+            global_options_with_values=_ROUTED_GLOBAL_OPTIONS,
+        ),
+        executable_matcher(
+            "routed",
+            "setup",
+            forbidden_flags=_ROUTED_FORBIDDEN_FLAGS,
+            global_flags=_ROUTED_GLOBAL_FLAGS,
+            global_options_with_values=_ROUTED_GLOBAL_OPTIONS,
+        ),
+        executable_matcher(
+            "routed",
+            "init",
+            forbidden_flags=_ROUTED_FORBIDDEN_FLAGS,
+            global_flags=_ROUTED_GLOBAL_FLAGS,
+            global_options_with_values=_ROUTED_GLOBAL_OPTIONS,
+        ),
+    )
+)
 _ROUTED_ADAPTERS_UNINSTALL = _routed_matcher("adapters", "uninstall")
 _ROUTED_UNINSTALL = _routed_matcher("uninstall", forbidden_flags=frozenset({"--dry-run"}))
 _ROUTED_UPDATE = AnyMatcher(

@@ -32,6 +32,12 @@ ROUTED_REVIEW_CASES: tuple[tuple[str, str, str], ...] = (
     ("routed adapters install", _ADAPTER_ACTION, _ADAPTER_INSTALL_RULE),
     ("routed adapters install cursor", _ADAPTER_ACTION, _ADAPTER_INSTALL_RULE),
     ("routed adapters install claude-code", _ADAPTER_ACTION, _ADAPTER_INSTALL_RULE),
+    ("routed setup", _ADAPTER_ACTION, _ADAPTER_INSTALL_RULE),
+    ("routed setup --json", _ADAPTER_ACTION, _ADAPTER_INSTALL_RULE),
+    ("routed init", _ADAPTER_ACTION, _ADAPTER_INSTALL_RULE),
+    ("routed init -q", _ADAPTER_ACTION, _ADAPTER_INSTALL_RULE),
+    ("routed.exe setup", _ADAPTER_ACTION, _ADAPTER_INSTALL_RULE),
+    ("routed.cmd init", _ADAPTER_ACTION, _ADAPTER_INSTALL_RULE),
     ("routed.exe adapters install", _ADAPTER_ACTION, _ADAPTER_INSTALL_RULE),
     ("routed adapters uninstall", _ADAPTER_ACTION, _ADAPTER_UNINSTALL_RULE),
     ("routed adapters uninstall cursor", _ADAPTER_ACTION, _ADAPTER_UNINSTALL_RULE),
@@ -61,6 +67,10 @@ ROUTED_SAFE_COMMANDS: tuple[str, ...] = (
     "routed adapters list",
     "routed adapters install --help",
     "routed adapters install -h",
+    "routed setup --help",
+    "routed setup -h",
+    "routed init --help",
+    "routed init -h",
     "routed adapters uninstall --help",
     "routed adapters uninstall -h",
     "routed uninstall --dry-run",
@@ -195,6 +205,60 @@ def test_enabled_routed_help_and_safe_commands_do_not_review(tmp_path: Path) -> 
         )
 
 
+def test_routed_setup_init_coverage(tmp_path: Path) -> None:
+    """Comprehensive regression coverage for mutating routed setup and init aliases and safe help variants."""
+    mutating_cases = (
+        "routed setup",
+        "routed setup --json",
+        "routed setup -q",
+        "routed setup --quiet",
+        "routed setup --host local",
+        "routed.exe setup",
+        "routed.cmd setup",
+        "routed init",
+        "routed init --json",
+        "routed init -q",
+        "routed init --quiet",
+        "routed init --host local",
+        "routed.exe init",
+        "routed.cmd init",
+    )
+    for command in mutating_cases:
+        evaluation = real_native_command_evaluation(
+            command,
+            cwd=tmp_path,
+            home_dir=tmp_path,
+            extension_control_layers=(enable_local_admin_extension_layer("command.routed"),),
+        ).evaluation
+        assert evaluation.controlling_rule_id == _ADAPTER_INSTALL_RULE, (
+            f"Expected {command} to match adapters-install rule"
+        )
+        assert evaluation.controlling_action_class == _ADAPTER_ACTION
+        assert any(item.rule.rule_id == _ADAPTER_INSTALL_RULE for item in evaluation.extension_observations)
+        assert any(item.match.action_class == _ADAPTER_ACTION for item in evaluation.matches)
+
+    safe_cases = (
+        "routed setup --help",
+        "routed setup -h",
+        "routed init --help",
+        "routed init -h",
+    )
+    for command in safe_cases:
+        evaluation = real_native_command_evaluation(
+            command,
+            cwd=tmp_path,
+            home_dir=tmp_path,
+            extension_control_layers=(enable_local_admin_extension_layer("command.routed"),),
+        ).evaluation
+        assert evaluation.controlling_rule_id != _ADAPTER_INSTALL_RULE, (
+            f"Expected {command} not to match adapters-install rule"
+        )
+        assert all(
+            item.rule.rule_id != _ADAPTER_INSTALL_RULE or not item.effective_evidence
+            for item in evaluation.extension_observations
+        )
+
+
 def test_routed_uninstall_coverage(tmp_path: Path) -> None:
     """Comprehensive regression coverage for mutating routed uninstall and safe --dry-run/help variants."""
     mutating_cases = (
@@ -215,14 +279,8 @@ def test_routed_uninstall_coverage(tmp_path: Path) -> None:
         ).evaluation
         assert evaluation.controlling_rule_id == _UNINSTALL_RULE, f"Expected {command} to match uninstall rule"
         assert evaluation.controlling_action_class == _UNINSTALL_ACTION
-        assert any(
-            item.rule.rule_id == _UNINSTALL_RULE
-            for item in evaluation.extension_observations
-        )
-        assert any(
-            item.match.action_class == _UNINSTALL_ACTION
-            for item in evaluation.matches
-        )
+        assert any(item.rule.rule_id == _UNINSTALL_RULE for item in evaluation.extension_observations)
+        assert any(item.match.action_class == _UNINSTALL_ACTION for item in evaluation.matches)
 
     safe_cases = (
         "routed uninstall --dry-run",
