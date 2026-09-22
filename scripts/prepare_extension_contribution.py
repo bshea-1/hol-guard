@@ -17,7 +17,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE_PREFIX = "contributions/command-sources/"
 FIXTURE_PREFIX = "tests/fixtures/command-source-"
-MAX_FIXTURE_BYTES = 1_048_576
+MAX_FIXTURE_BYTES = 4_194_304
 
 
 def _relative(path: Path) -> str:
