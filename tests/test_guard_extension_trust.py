@@ -94,6 +94,7 @@ def test_trust_map_covers_every_builtin_extension() -> None:
         "command.repo2nb",
         "command.routed",
         "command.skill-sunset",
+        "command.uivoid",
     }
     assert trust_class_for("command.git") == "first-party"
     assert trust_class_for("command.cloud.aws") == "trusted-library"

@@ -6,7 +6,7 @@
     "canonical_diff_digest",
     "effective"
   ],
-  "catalog_digest": "c9a688bd6fde54eabfbc6ac160a3fabf639eb9f8b2c77302d3c0023110a56a05",
+  "catalog_digest": "4eac38f47046e8b99dac14dd0e32a0ce3e595c388b457d9e448d08c191a4e29c",
   "control_schema_version": "1.0.0",
   "daemon_api_schema": "guard.daemon.extension-controls.v1",
   "effective_shape": [
@@ -20,7 +20,7 @@
     "failures",
     "projection"
   ],
-  "extension_count": 72,
+  "extension_count": 73,
   "extension_ids": [
     "command.api-gateway",
     "command.backup.borg",
@@ -93,12 +93,13 @@
     "command.storage.google-cloud",
     "command.storage.minio",
     "command.system",
+    "command.uivoid",
     "command.windows"
   ],
   "extension_schema_version": 2,
   "installed_browser_config": "dashboard/playwright.installed.config.ts",
   "overview_route": "/extensions",
-  "permission_count": 252,
+  "permission_count": 257,
   "permission_examples": {
     "command.api-gateway.permission.delete": "aws apigateway delete-rest-api",
     "command.backup.borg.permission.mutation": "borg delete",
@@ -351,6 +352,11 @@
     "command.storage.minio.permission.mirror": "mc mirror",
     "command.storage.minio.permission.mv": "mc mv",
     "command.system.permission.disk-or-power-mutation": "halt",
+    "command.uivoid.permission.create": "uivoid create my-app",
+    "command.uivoid.permission.credentials": "uivoid credentials my-app",
+    "command.uivoid.permission.login": "uivoid login",
+    "command.uivoid.permission.oauth-config": "uivoid oauth-config my-app",
+    "command.uivoid.permission.skill-install": "uivoid skill --install",
     "command.windows.permission.destructive-storage": "clear-disk"
   },
   "permission_families": {
@@ -701,6 +707,11 @@
     "command.storage.minio.permission.mirror",
     "command.storage.minio.permission.mv",
     "command.system.permission.disk-or-power-mutation",
+    "command.uivoid.permission.create",
+    "command.uivoid.permission.credentials",
+    "command.uivoid.permission.login",
+    "command.uivoid.permission.oauth-config",
+    "command.uivoid.permission.skill-install",
     "command.windows.permission.destructive-storage"
   ],
   "preview_shape": [
@@ -713,7 +724,7 @@
     "controls",
     "semantic_preview"
   ],
-  "rule_count": 239,
+  "rule_count": 244,
   "rule_ids": [
     "command.api-gateway.delete",
     "command.backup.borg.mutation",
@@ -953,6 +964,11 @@
     "command.storage.minio.cat",
     "command.storage.minio.mirror",
     "command.system.disk-or-power-mutation",
+    "command.uivoid.create",
+    "command.uivoid.credentials",
+    "command.uivoid.oauth-config",
+    "command.uivoid.login",
+    "command.uivoid.skill-install",
     "command.windows.destructive-storage"
   ],
   "schema_version": "guard.extension-control-center.baseline.v1"

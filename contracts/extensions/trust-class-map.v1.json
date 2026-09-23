@@ -87,7 +87,8 @@
       "command.remote.essh",
       "command.repo2nb",
       "command.routed",
-      "command.skill-sunset"
+      "command.skill-sunset",
+      "command.uivoid"
     ]
   }
 }
