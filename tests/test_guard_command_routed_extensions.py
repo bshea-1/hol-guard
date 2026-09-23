@@ -44,6 +44,7 @@ ROUTED_REVIEW_CASES: tuple[tuple[str, str, str], ...] = (
     ("routed.cmd adapters uninstall cursor", _ADAPTER_ACTION, _ADAPTER_UNINSTALL_RULE),
     ("routed uninstall", _UNINSTALL_ACTION, _UNINSTALL_RULE),
     ("routed uninstall --json", _UNINSTALL_ACTION, _UNINSTALL_RULE),
+    ("routed --json -- uninstall", _UNINSTALL_ACTION, _UNINSTALL_RULE),
     ("routed.exe uninstall", _UNINSTALL_ACTION, _UNINSTALL_RULE),
     ("routed update", _UPDATE_ACTION, _UPDATE_RULE),
     ("routed update -q", _UPDATE_ACTION, _UPDATE_RULE),

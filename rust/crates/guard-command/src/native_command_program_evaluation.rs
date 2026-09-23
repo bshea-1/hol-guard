@@ -243,7 +243,11 @@ fn without_options(
     while index < arguments.len() {
         let argument = &arguments[index];
         if argument == "--" {
-            retained.extend_from_slice(&arguments[index..]);
+            if retained.is_empty() {
+                retained.extend_from_slice(&arguments[index + 1..]);
+            } else {
+                retained.extend_from_slice(&arguments[index..]);
+            }
             break;
         }
         let option_name = argument.split('=').next().unwrap_or(argument);
