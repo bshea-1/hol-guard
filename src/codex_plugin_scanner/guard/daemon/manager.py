@@ -54,6 +54,7 @@ from .discovery import (
 from .file_locking import lock_daemon_file as _lock_daemon_start_file
 from .file_locking import try_lock_daemon_file as _try_lock_daemon_file
 from .lifecycle_journal import record_daemon_lifecycle_event
+from .pipx_import_paths import pipx_shared_import_paths
 from .start_classification import (
     GuardDaemonStillStartingError,
     SpawnedDaemonSignals,
@@ -267,6 +268,8 @@ def _trusted_daemon_import_paths() -> tuple[Path, ...]:
         value = configured_paths.get(key)
         if isinstance(value, str) and value.strip():
             candidates.append(Path(value).expanduser())
+
+    candidates.extend(pipx_shared_import_paths(_trusted_daemon_prefix(sys.prefix), configured_paths))
 
     trusted_paths: list[Path] = []
     seen: set[Path] = set()
@@ -1427,6 +1430,13 @@ def _guard_daemon_pid_for_guard_home_port(guard_home: Path, port: int) -> int | 
     return None
 
 
+def _daemon_state_executable() -> str:
+    try:
+        return str(Path(sys.executable).resolve(strict=True))
+    except OSError:
+        return sys.executable
+
+
 def write_guard_daemon_state(
     guard_home: Path,
     port: int,
@@ -1449,6 +1459,7 @@ def write_guard_daemon_state(
             "port": port,
             "compatibility_version": GUARD_DAEMON_COMPATIBILITY_VERSION,
             "package_version": __version__,
+            "executable": _daemon_state_executable(),
             "source_root": _current_guard_daemon_source_root(),
             "runtime_fingerprint": _current_guard_daemon_runtime_fingerprint(),
             "pid": pid if isinstance(pid, int) and pid > 0 else os.getpid(),
